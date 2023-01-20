@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.talentZone</groupId>
-	<artifactId>shopping-cart</artifactId>
+	<artifactId>shopping-car</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>shopping-cart</name>
 	<description>Demo project for Spring Boot</description>
