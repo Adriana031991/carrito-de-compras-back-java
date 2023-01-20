@@ -11,6 +11,7 @@ import java.util.Optional;
 @Document(collection = "shopping-car")
 public class ShoppingCar {
 
+    private String Id;
     private List<ItemCar> itemsCar;
 
     public ShoppingCar(){
