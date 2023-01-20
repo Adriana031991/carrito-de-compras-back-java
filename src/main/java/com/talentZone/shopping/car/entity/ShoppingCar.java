@@ -1,6 +1,7 @@
 package com.talentZone.shopping.car.entity;
 
 import lombok.Data;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
@@ -11,20 +12,20 @@ import java.util.Optional;
 @Document(collection = "shopping-car")
 public class ShoppingCar {
 
-    private String Id;
+    @Id
+    private String id;
     private List<ItemCar> itemsCar;
+
 
     public ShoppingCar(){
         this.itemsCar = new ArrayList<>();
     }
 
     public void addItemCar(ItemCar itemCar){
-
         if (itemsCar.contains(itemCar)){
             validateItemCarExistInList(itemCar);
         } else {
             this.itemsCar.add(itemCar);
-
         }
     }
 
@@ -36,11 +37,9 @@ public class ShoppingCar {
         }
     }
 
-    public List<ItemCar> getItemCar(){
-        return itemsCar;
+
+    public int totalInvoice(){
+        return itemsCar.stream().mapToInt(ItemCar::getImportItem).sum();
     }
 
-    public int getTotal(){
-        return itemsCar.stream().mapToInt(ItemCar::getImport).sum();
-    }
 }

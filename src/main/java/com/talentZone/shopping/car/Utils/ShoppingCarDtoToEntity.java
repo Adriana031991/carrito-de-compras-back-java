@@ -15,7 +15,7 @@ public class ShoppingCarDtoToEntity implements Converter<ShoppingCarDto, Shoppin
         if (!StringUtils.isEmpty(dto.getId())) {
             cart.setId(dto.getId());
         }
-        cart.setItemsCar(dto.getItemCars());
+        cart.setItemsCar(dto.getItemsCar());
         return cart;
     }
 }

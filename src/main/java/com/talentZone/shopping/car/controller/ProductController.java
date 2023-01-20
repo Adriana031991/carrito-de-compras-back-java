@@ -33,7 +33,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping(value = "/productbyname/{name}")
+    @GetMapping(value = "/product-by-name/{name}")
     private ResponseEntity getProductByName(@PathVariable(value = "name") String name) {
         try {
             Product product = service.findByName(name);
@@ -44,7 +44,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping(value = "/productbyid/{id}")
+    @GetMapping(value = "/product-by-id/{id}")
     private ResponseEntity getProductById(@PathVariable(value = "id") String id) {
         try {
             Product product = service.findItemById(id);
@@ -66,7 +66,7 @@ public class ProductController {
         }
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/update/{id}")
     private ResponseEntity update(@RequestBody ProductDto productDto, @PathVariable(value = "id") String id) {
         try {
             Product product = service.update(productDto, id);
@@ -77,7 +77,7 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/delete/{id}")
     private ResponseEntity delete(@PathVariable(value = "id") String id) {
         try {
             service.delete(id);

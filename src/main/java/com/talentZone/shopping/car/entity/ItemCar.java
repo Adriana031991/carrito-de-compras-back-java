@@ -9,8 +9,6 @@ import java.util.Objects;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 @Document(collection = "itemCar")
 public class ItemCar {
 
@@ -19,7 +17,7 @@ public class ItemCar {
     private int quantity;
     private Product product;
 
-    public int getImport() {
+    public int getImportItem() {
         return quantity *product.getValue();
     }
 

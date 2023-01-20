@@ -13,7 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ShoppingCarDto extends BaseRequestDto{
-    private List<ItemCar> itemCars;
+    private List<ItemCar> itemsCar;
 
 
 }
