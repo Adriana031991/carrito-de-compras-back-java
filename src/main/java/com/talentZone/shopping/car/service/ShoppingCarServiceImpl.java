@@ -1,17 +1,30 @@
 package com.talentZone.shopping.car.service;
 
-import com.talentZone.shopping.car.dto.InvoiceShoppingCarDto;
+import com.talentZone.shopping.car.Utils.InvoiceEntityToDto;
+import com.talentZone.shopping.car.dto.InvoiceDto;
+import com.talentZone.shopping.car.dto.ShoppingCarDto;
+import com.talentZone.shopping.car.entity.Invoice;
 import com.talentZone.shopping.car.entity.ItemCar;
 import com.talentZone.shopping.car.entity.Product;
 import com.talentZone.shopping.car.entity.ShoppingCar;
+import com.talentZone.shopping.car.enums.StatusShoppingCar;
+import com.talentZone.shopping.car.exception.ValidationException;
+import com.talentZone.shopping.car.repository.InvoiceRepository;
 import com.talentZone.shopping.car.repository.ItemCartRepository;
 import com.talentZone.shopping.car.repository.ProductRepository;
 import com.talentZone.shopping.car.repository.ShoppingCarRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -32,47 +45,54 @@ public class ShoppingCarServiceImpl implements ShoppingCarService {
         return shoppingCarRepository.findAll();
     }
 
+
     @Override
     public Integer addProduct(String carId, String productId, Integer quantity) {
         Integer addedQuantity = quantity;
         ItemCar itemCar;
-        ShoppingCar shoppingCar = shoppingCarRepository.findById(carId).get();
+        Optional<ShoppingCar> shoppingCar = shoppingCarRepository.findById(carId);
 
         try {
-            if (shoppingCar != null){
+            if (shoppingCar.isEmpty()) {
                 itemCar = addProductToCar(productId, quantity);
-                shoppingCar.addItemCar(itemCar);
+                shoppingCar.get().addItemCar(itemCar);
+                shoppingCar.get().setStatus(StatusShoppingCar.PENDING);
+                shoppingCarRepository.save(shoppingCar.get());
             } else {
-                shoppingCar = new ShoppingCar();
+                ShoppingCar shoppingCar2 = new ShoppingCar();
                 itemCar = addProductToCar(productId, quantity);
-                shoppingCar.addItemCar(itemCar);
+                shoppingCar2.addItemCar(itemCar);
+                shoppingCar2.setStatus(StatusShoppingCar.ACTIVE);
+                shoppingCarRepository.save(shoppingCar2);
             }
-            shoppingCarRepository.save(shoppingCar);
             return addedQuantity;
 
-        } catch (Exception e){
+        } catch (Exception e) {
 
         }
+
         return -1;
     }
 
-    private ItemCar addProductToCar(String productId, Integer quantity) throws RuntimeException {
+    private ItemCar addProductToCar(String productId, Integer quantity) throws ValidationException {
         Integer addedQuantity = quantity;
-        Product product = productRepository.findById(productId).get();
-        ItemCar itemCar = itemCartRepository.findByProduct(product);
-        System.out.println("itemcar: "+itemCar);
+        Optional<Product> product = productRepository.findById(productId);
 
-        if (product == null){
-            throw new RuntimeException("The product not exist");
+        if (product.isEmpty()) {
+            throw new ValidationException("The product not exist");
         }
 
-        if (itemCar != null){
-            addedQuantity = itemCar.getQuantity()+ quantity;
-            itemCar.setQuantity(addedQuantity);;
+        ItemCar itemCar = itemCartRepository.findByProduct(product.get());
+
+
+        if (itemCar != null) {
+            addedQuantity = itemCar.getQuantity() + quantity;
+            itemCar.setQuantity(addedQuantity);
+
         } else {
             itemCar = new ItemCar();
             itemCar.setQuantity(quantity);
-            itemCar.setProduct(product);
+            itemCar.setProduct(product.get());
         }
 
         itemCartRepository.save(itemCar);
@@ -81,15 +101,14 @@ public class ShoppingCarServiceImpl implements ShoppingCarService {
 
     @Override
     public Integer updateQuantity(String carId, String productId, Integer quantity) {
-        ShoppingCar shoppingCar = shoppingCarRepository.findById(carId).get();
-        if (shoppingCar != null) {
-            Product product = productRepository.findById(productId).get();
-            ItemCar itemCar = itemCartRepository.findByProduct(product);
-            System.out.println("itemcar 2: "+itemCar);
-
-            int subtotal = product.getValue() * quantity;
-            shoppingCar.totalInvoice();
-            System.out.println("subtotal: "+ subtotal + itemCar);
+        Optional<ShoppingCar> shoppingCar = shoppingCarRepository.findById(carId);
+        if (shoppingCar.isEmpty()) {
+            Optional<Product> product = productRepository.findById(productId);
+            if (product.isEmpty()) {
+                throw new ValidationException("Not found product");
+            }
+            int subtotal = product.get().getValue() * quantity;
+            shoppingCar.get().totalInvoice();
             return subtotal;
 
         }
@@ -97,19 +116,11 @@ public class ShoppingCarServiceImpl implements ShoppingCarService {
     }
 
     @Override
-    public String createShoppingCar(){
+    public String createShoppingCar() {
         ShoppingCar shoppingCar = new ShoppingCar();
-        shoppingCar= shoppingCarRepository.save(shoppingCar);
+        shoppingCar = shoppingCarRepository.save(shoppingCar);
         return shoppingCar.getId();
     }
 
-    @Override
-    public InvoiceShoppingCarDto invoiceShoppingCar(String id) {
-        ShoppingCar shoppingCar = shoppingCarRepository.findById(id).get();
-        InvoiceShoppingCarDto invoice = new InvoiceShoppingCarDto();
-        invoice.setTotal(shoppingCar.totalInvoice());
-        invoice.setShoppingCar(shoppingCar);
-        invoice.setId("1");
-        return invoice;
-    }
+
 }
