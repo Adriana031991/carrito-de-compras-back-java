@@ -9,7 +9,7 @@ import java.util.List;
 public interface InvoiceService {
     String createIdInvoice();
 
-    List<InvoiceDto> findAllInvoices();
+    List<Invoice> findAllInvoices();
 
     InvoiceDto invoiceShoppingCar(String id);
 }

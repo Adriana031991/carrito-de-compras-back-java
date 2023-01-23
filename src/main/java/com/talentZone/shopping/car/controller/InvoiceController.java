@@ -1,6 +1,7 @@
 package com.talentZone.shopping.car.controller;
 
 import com.talentZone.shopping.car.dto.InvoiceDto;
+import com.talentZone.shopping.car.entity.Invoice;
 import com.talentZone.shopping.car.entity.ShoppingCar;
 import com.talentZone.shopping.car.service.InvoiceService;
 import com.talentZone.shopping.car.service.ShoppingCarService;
@@ -20,7 +21,7 @@ public class InvoiceController {
     private InvoiceService invoiceService;
 
     @PostMapping("/car/{id}")
-    public ResponseEntity createInvoiceShoppingCarById(@PathVariable(value = "id") String carId) {
+    public ResponseEntity createInvoiceShoppingCar(@PathVariable(value = "id") String carId) {
         try {
             InvoiceDto invoice = invoiceService.invoiceShoppingCar(carId);
             return new ResponseEntity<>(invoice, HttpStatus.OK);
@@ -33,8 +34,8 @@ public class InvoiceController {
     @GetMapping
     public ResponseEntity getInvoices() {
         try {
-            List<InvoiceDto> invoiceDtos = invoiceService.findAllInvoices();
-            return new ResponseEntity<>(invoiceDtos, HttpStatus.OK);
+            List<Invoice> invoice = invoiceService.findAllInvoices();
+            return new ResponseEntity<>(invoice, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Find invoices method error {}", e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -42,7 +43,7 @@ public class InvoiceController {
     }
 
     @PostMapping("/create-invoice")
-    public ResponseEntity createInvoiceShoppingCar(){
+    public ResponseEntity createIdInvoiceShoppingCar(){
         try {
             String idInvoice = invoiceService.createIdInvoice();
             return new ResponseEntity<>(idInvoice, HttpStatus.OK);
