@@ -6,6 +6,9 @@ import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class InvoiceEntityToDto implements Converter<Invoice, InvoiceDto> {
 
@@ -21,6 +24,7 @@ public class InvoiceEntityToDto implements Converter<Invoice, InvoiceDto> {
         invoiceDto.setTotal(invoice.getTotal());
         return invoiceDto;
     }
+
 
 
 }

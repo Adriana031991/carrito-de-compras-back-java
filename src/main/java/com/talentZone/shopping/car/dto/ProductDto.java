@@ -16,6 +16,7 @@ public class ProductDto extends BaseRequestDto {
     private String name;
     private Integer value;
     private Integer quantity;
+    private String image;
 
     public ProductDto() {
         this.quantity = 1;
