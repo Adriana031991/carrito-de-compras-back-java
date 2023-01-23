@@ -1,6 +1,6 @@
 package com.talentZone.shopping.car.service;
 
-import com.talentZone.shopping.car.dto.InvoiceShoppingCarDto;
+import com.talentZone.shopping.car.dto.ShoppingCarDto;
 import com.talentZone.shopping.car.entity.ShoppingCar;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public interface ShoppingCarService {
 
     String createShoppingCar();
 
-    InvoiceShoppingCarDto invoiceShoppingCar(String id);
+
 
 
 }

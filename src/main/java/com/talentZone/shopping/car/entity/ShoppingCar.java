@@ -1,5 +1,6 @@
 package com.talentZone.shopping.car.entity;
 
+import com.talentZone.shopping.car.enums.StatusShoppingCar;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -16,6 +17,8 @@ public class ShoppingCar {
     private String id;
     private List<ItemCar> itemsCar;
 
+    private Invoice invoice;
+    private StatusShoppingCar status;
 
     public ShoppingCar(){
         this.itemsCar = new ArrayList<>();

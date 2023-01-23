@@ -1,6 +1,7 @@
 package com.talentZone.shopping.car.controller;
 
-import com.talentZone.shopping.car.dto.InvoiceShoppingCarDto;
+import com.talentZone.shopping.car.dto.InvoiceDto;
+import com.talentZone.shopping.car.dto.ShoppingCarDto;
 import com.talentZone.shopping.car.entity.ShoppingCar;
 import com.talentZone.shopping.car.service.ShoppingCarService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/shopping-car")
 public class ShoppingCarController {
+
+    private static final String ERRORMESSAGE = "Find Carts method error {}";
+
     private ShoppingCarService shoppingCarService;
 
     public ShoppingCarController(ShoppingCarService shoppingCarService) {
@@ -21,47 +25,38 @@ public class ShoppingCarController {
     }
 
     @PostMapping("/create-shopping-car")
-    private ResponseEntity createShoppingCar(){
+    public ResponseEntity createShoppingCar(){
         try {
             String idShoppingCar = shoppingCarService.createShoppingCar();
             return new ResponseEntity<>(idShoppingCar, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Find Carts method error {}", e.getMessage(), e);
+            log.error(ERRORMESSAGE, e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
     }
 
     @GetMapping
-    private ResponseEntity getCarts() {
+    public ResponseEntity getCarts() {
         try {
             List<ShoppingCar> shoppingCar = shoppingCarService.findAllCarts();
             return new ResponseEntity<>(shoppingCar, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Find Carts method error {}", e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @GetMapping("/invoice/{id}")
-    private ResponseEntity getInvoiceShoppingCarById(@PathVariable(value = "id") String carId) {
-        try {
-            InvoiceShoppingCarDto invoice = shoppingCarService.invoiceShoppingCar(carId);
-            return new ResponseEntity<>(invoice, HttpStatus.OK);
-        } catch (Exception e) {
-            log.error("Find Carts method error {}", e.getMessage(), e);
+            log.error(ERRORMESSAGE, e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
+
     @PostMapping("/add-product-to-car/{cid}/{pid}/{qty}")
-    private ResponseEntity addProductToCar(@PathVariable(value = "cid") String carId,
+    public ResponseEntity addProductToCar(@PathVariable(value = "cid") String carId,
                                            @PathVariable(value = "pid") String productId,
                                            @PathVariable(value = "qty") Integer quantity){
         try {
             Integer addQuantity = shoppingCarService.addProduct(carId, productId, quantity);
             return new ResponseEntity<>(addQuantity, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Find Carts method error {}", e.getMessage(), e);
+            log.error(ERRORMESSAGE, e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -69,14 +64,14 @@ public class ShoppingCarController {
 
 
     @PostMapping("/update-quantity/{cid}/{pid}/{qty}")
-    private ResponseEntity updateQuantity(@PathVariable(value = "cid") String carId,
+    public ResponseEntity updateQuantity(@PathVariable(value = "cid") String carId,
                                           @PathVariable(value = "pid") String productId,
                                           @PathVariable(value = "qty") Integer quantity){
         try {
             Integer addQuantity = shoppingCarService.updateQuantity(carId, productId, quantity);
             return new ResponseEntity<>(addQuantity, HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Find Carts method error {}", e.getMessage(), e);
+            log.error(ERRORMESSAGE, e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

@@ -5,6 +5,10 @@ import com.talentZone.shopping.car.entity.Product;
 import com.talentZone.shopping.car.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,9 +27,9 @@ public class ProductController {
     }
 
     @GetMapping
-    private ResponseEntity products() {
+    public ResponseEntity products() {
         try {
-            List<Product> products = service.findAll();
+            List<Product> products = service.findAllProducts();
             return new ResponseEntity<>(products, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Find Items method error {}", e.getMessage(), e);
@@ -33,8 +37,21 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/all-paginated")
+    public ResponseEntity productsPaginated(@RequestParam(defaultValue = "0") Integer page,
+                                             @RequestParam(defaultValue = "10") Integer size) {
+        try {
+            Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+            Page<Product> products = service.findAllPageable(pageable);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error("Find Items paginated method error {}", e.getMessage(), e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping(value = "/product-by-name/{name}")
-    private ResponseEntity getProductByName(@PathVariable(value = "name") String name) {
+    public ResponseEntity getProductByName(@PathVariable(value = "name") String name) {
         try {
             Product product = service.findByName(name);
             return new ResponseEntity<>(product, HttpStatus.OK);
@@ -45,7 +62,7 @@ public class ProductController {
     }
 
     @GetMapping(value = "/product-by-id/{id}")
-    private ResponseEntity getProductById(@PathVariable(value = "id") String id) {
+    public ResponseEntity getProductById(@PathVariable(value = "id") String id) {
         try {
             Product product = service.findItemById(id);
             return new ResponseEntity<>(product, HttpStatus.OK);
@@ -56,7 +73,7 @@ public class ProductController {
     }
 
     @PostMapping
-    private ResponseEntity create(@RequestBody ProductDto productDto) {
+    public ResponseEntity create(@RequestBody ProductDto productDto) {
         try {
             Product product = service.save(productDto);
             return new ResponseEntity<>(product, HttpStatus.CREATED);
@@ -67,7 +84,7 @@ public class ProductController {
     }
 
     @PutMapping(value = "/update/{id}")
-    private ResponseEntity update(@RequestBody ProductDto productDto, @PathVariable(value = "id") String id) {
+    public ResponseEntity update(@RequestBody ProductDto productDto, @PathVariable(value = "id") String id) {
         try {
             Product product = service.update(productDto, id);
             return new ResponseEntity<>(product, HttpStatus.OK);
@@ -78,12 +95,12 @@ public class ProductController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    private ResponseEntity delete(@PathVariable(value = "id") String id) {
+    public ResponseEntity delete(@PathVariable(value = "id") String id) {
         try {
             service.delete(id);
             return new ResponseEntity<>("Success to remove Item!", HttpStatus.OK);
         } catch (Exception e) {
-            log.error("Erro no delete {}", e.getMessage(), e);
+            log.error("Error no delete {}", e.getMessage(), e);
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
