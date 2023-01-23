@@ -37,7 +37,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/all-paginated")
+    @GetMapping("/paginated")
     public ResponseEntity productsPaginated(@RequestParam(defaultValue = "0") Integer page,
                                              @RequestParam(defaultValue = "10") Integer size) {
         try {

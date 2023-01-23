@@ -52,10 +52,8 @@ public class InvoiceServiceImpl implements InvoiceService {
     }
 
     @Override
-    public List<InvoiceDto> findAllInvoices() {
-
-        List<Invoice> invoices = invoiceRepository.findAll();
-        return (List<InvoiceDto>) invoiceEntityToDto.convert((Invoice) invoices);
+    public List<Invoice> findAllInvoices() {
+        return invoiceRepository.findAll();
     }
 
 

@@ -20,5 +20,7 @@ public class Product {
     private @NonNull String name;
     private @NonNull Integer value;
     private @NonNull Integer quantity;
+    private @NonNull String image;
+
 
 }
