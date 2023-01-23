@@ -16,6 +16,7 @@ import java.util.List;
 @Slf4j
 @AllArgsConstructor
 @RestController
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
 @RequestMapping("/invoice")
 public class InvoiceController {
     private InvoiceService invoiceService;

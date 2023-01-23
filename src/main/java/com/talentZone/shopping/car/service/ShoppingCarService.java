@@ -4,6 +4,7 @@ import com.talentZone.shopping.car.dto.ShoppingCarDto;
 import com.talentZone.shopping.car.entity.ShoppingCar;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ShoppingCarService {
 
@@ -13,7 +14,7 @@ public interface ShoppingCarService {
 
     Integer updateQuantity(String carId, String productId, Integer quantity);
 
-    String createShoppingCar();
+    Map<String,String> createShoppingCar();
 
 
 

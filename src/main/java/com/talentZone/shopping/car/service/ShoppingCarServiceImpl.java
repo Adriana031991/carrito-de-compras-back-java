@@ -20,10 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -116,10 +113,13 @@ public class ShoppingCarServiceImpl implements ShoppingCarService {
     }
 
     @Override
-    public String createShoppingCar() {
+    public Map<String,String> createShoppingCar() {
+        Map<String,String> response = new HashMap<>();
+
         ShoppingCar shoppingCar = new ShoppingCar();
         shoppingCar = shoppingCarRepository.save(shoppingCar);
-        return shoppingCar.getId();
+        response.put("idShoppingCart", shoppingCar.getId());
+        return response;
     }
 
 
