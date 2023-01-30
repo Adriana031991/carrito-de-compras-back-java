@@ -1,27 +1,18 @@
 package com.talentZone.shopping.car.service;
 
-import com.talentZone.shopping.car.Utils.InvoiceEntityToDto;
-import com.talentZone.shopping.car.dto.InvoiceDto;
-import com.talentZone.shopping.car.dto.ShoppingCarDto;
-import com.talentZone.shopping.car.entity.Invoice;
 import com.talentZone.shopping.car.entity.ItemCar;
 import com.talentZone.shopping.car.entity.Product;
 import com.talentZone.shopping.car.entity.ShoppingCar;
 import com.talentZone.shopping.car.enums.StatusShoppingCar;
 import com.talentZone.shopping.car.exception.ValidationException;
-import com.talentZone.shopping.car.repository.InvoiceRepository;
 import com.talentZone.shopping.car.repository.ItemCartRepository;
 import com.talentZone.shopping.car.repository.ProductRepository;
 import com.talentZone.shopping.car.repository.ShoppingCarRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -42,6 +33,11 @@ public class ShoppingCarServiceImpl implements ShoppingCarService {
         return shoppingCarRepository.findAll();
     }
 
+    @Override
+    public Optional<ShoppingCar> findCart(String carId) {
+        return shoppingCarRepository.findById(carId);
+    }
+
 
     @Override
     public Integer addProduct(String carId, String productId, Integer quantity) {
@@ -50,17 +46,19 @@ public class ShoppingCarServiceImpl implements ShoppingCarService {
         Optional<ShoppingCar> shoppingCar = shoppingCarRepository.findById(carId);
 
         try {
-            if (shoppingCar.isEmpty()) {
+            if (shoppingCar.isPresent()) {
                 itemCar = addProductToCar(productId, quantity);
                 shoppingCar.get().addItemCar(itemCar);
                 shoppingCar.get().setStatus(StatusShoppingCar.PENDING);
                 shoppingCarRepository.save(shoppingCar.get());
+            System.out.println("q"+shoppingCar.get() );
             } else {
-                ShoppingCar shoppingCar2 = new ShoppingCar();
+                shoppingCar = Optional.of(new ShoppingCar());
                 itemCar = addProductToCar(productId, quantity);
-                shoppingCar2.addItemCar(itemCar);
-                shoppingCar2.setStatus(StatusShoppingCar.ACTIVE);
-                shoppingCarRepository.save(shoppingCar2);
+                shoppingCar.get().addItemCar(itemCar);
+                shoppingCar.get().setStatus(StatusShoppingCar.ACTIVE);
+                shoppingCarRepository.save(shoppingCar.get());
+            System.out.println("w"+shoppingCar.get() );
             }
             return addedQuantity;
 
@@ -85,14 +83,17 @@ public class ShoppingCarServiceImpl implements ShoppingCarService {
         if (itemCar != null) {
             addedQuantity = itemCar.getQuantity() + quantity;
             itemCar.setQuantity(addedQuantity);
+        System.out.println("e"+itemCar );
 
         } else {
             itemCar = new ItemCar();
             itemCar.setQuantity(quantity);
             itemCar.setProduct(product.get());
+        System.out.println("f"+itemCar );
         }
 
         itemCartRepository.save(itemCar);
+
         return itemCar;
     }
 

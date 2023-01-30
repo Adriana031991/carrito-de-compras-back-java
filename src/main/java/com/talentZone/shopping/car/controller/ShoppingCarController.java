@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Slf4j
 @RestController
@@ -43,6 +44,17 @@ public class ShoppingCarController {
     public ResponseEntity getCarts() {
         try {
             List<ShoppingCar> shoppingCar = shoppingCarService.findAllCarts();
+            return new ResponseEntity<>(shoppingCar, HttpStatus.OK);
+        } catch (Exception e) {
+            log.error(ERRORMESSAGE, e.getMessage(), e);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/get-cart-by-carId/{cid}")
+    public ResponseEntity getCart(@PathVariable(value = "cid") String carId) {
+        try {
+            Optional<ShoppingCar> shoppingCar = shoppingCarService.findCart(carId);
             return new ResponseEntity<>(shoppingCar, HttpStatus.OK);
         } catch (Exception e) {
             log.error(ERRORMESSAGE, e.getMessage(), e);

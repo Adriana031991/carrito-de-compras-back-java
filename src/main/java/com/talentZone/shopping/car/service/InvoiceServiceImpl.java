@@ -17,10 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -45,10 +42,14 @@ public class InvoiceServiceImpl implements InvoiceService {
     private InvoiceEntityToDto invoiceEntityToDto;
 
     @Override
-    public String createIdInvoice() {
+    public Map<String,String> createIdInvoice() {
+        Map<String,String> response = new HashMap<>();
+
         Invoice invoice = new Invoice();
         invoice = invoiceRepository.save(invoice);
-        return invoice.getId();
+        response.put("idInvoice", invoice.getId());
+
+        return response;
     }
 
     @Override

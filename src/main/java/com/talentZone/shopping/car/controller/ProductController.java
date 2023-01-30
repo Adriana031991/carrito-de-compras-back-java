@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -96,13 +97,16 @@ public class ProductController {
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ResponseEntity delete(@PathVariable(value = "id") String id) {
+    public ResponseEntity<Map<String,String>> delete(@PathVariable(value = "id") String id) {
         try {
-            service.delete(id);
-            return new ResponseEntity<>("Success to remove Item!", HttpStatus.OK);
+            Map<String,String> response = service.delete(id);
+
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
             log.error("Error no delete {}", e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return (ResponseEntity<Map<String, String>>) ResponseEntity.internalServerError();
+
         }
     }
 }
