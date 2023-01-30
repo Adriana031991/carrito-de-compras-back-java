@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ProductService {
     List<Product> findAllProducts();
@@ -20,7 +21,7 @@ public interface ProductService {
 
     Product update(ProductDto itemRequestDto, String id);
 
-    void delete(String id);
+    Map<String,String> delete(String id);
 
     List<Product> saveAll(List<Product> products);
 

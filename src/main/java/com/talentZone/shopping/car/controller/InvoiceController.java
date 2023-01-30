@@ -12,10 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @AllArgsConstructor
 @RestController
+@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST})
 @RequestMapping("/invoice")
 public class InvoiceController {
     private InvoiceService invoiceService;
@@ -43,13 +45,14 @@ public class InvoiceController {
     }
 
     @PostMapping("/create-invoice")
-    public ResponseEntity createIdInvoiceShoppingCar(){
+    public ResponseEntity<Map<String,String>> createIdInvoiceShoppingCar(){
         try {
-            String idInvoice = invoiceService.createIdInvoice();
-            return new ResponseEntity<>(idInvoice, HttpStatus.OK);
+            Map<String,String> idInvoice = invoiceService.createIdInvoice();
+            return ResponseEntity.ok(idInvoice);
         } catch (Exception e) {
             log.error("Could'n create id invoice", e.getMessage(), e);
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+            return (ResponseEntity<Map<String, String>>) ResponseEntity.internalServerError();
+
         }
 
     }

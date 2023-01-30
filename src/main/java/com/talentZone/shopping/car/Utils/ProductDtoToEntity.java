@@ -18,6 +18,7 @@ public class ProductDtoToEntity implements Converter<ProductDto, Product> {
         item.setName(dto.getName());
         item.setValue(dto.getValue());
         item.setQuantity(dto.getQuantity());
+        item.setImage(dto.getImage());
         return item;
     }
 }

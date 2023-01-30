@@ -12,7 +12,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -62,13 +64,18 @@ public class ProductServicesImpl implements ProductService {
         productToUpdate.get().setName(itemRequestDto.getName());
         productToUpdate.get().setValue(itemRequestDto.getValue());
         productToUpdate.get().setQuantity(itemRequestDto.getQuantity());
+        productToUpdate.get().setImage(itemRequestDto.getImage());
 
         return repository.save(productToUpdate.get());
     }
 
     @Override
-    public void delete(String id) {
+    public Map<String,String> delete(String id) {
+        Map<String,String> response = new HashMap<>();
+
         repository.deleteById(id);
+        response.put("response","Success to remove Item!");
+        return response;
     }
 
     @Override
